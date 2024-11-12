@@ -1,40 +1,45 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
+const User = require('../models/User.js');
 
-// Signup route
+// Register Route
 router.post('/signup', async (req, res) => {
-  const { username, email, password } = req.body;
   try {
+    const { username, email, password } = req.body;
     const user = new User({ username, email, password });
     await user.save();
-    res.redirect('/login');
+    res.send('User registered successfully');
   } catch (error) {
-    res.status(400).send('Error signing up: ' + error.message);
+    console.error(error);
+    res.status(500).send('Error registering user');
   }
 });
 
-// Login route
+// Login Route
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
   try {
+    const { username, password } = req.body;
     const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(400).send('Invalid credentials');
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(400).send('Invalid email or password');
     }
-    
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).send('Invalid credentials');
-    }
-    
-    // Save user session info
-    req.session.user = user;
-    res.redirect('/');
+    req.session.user = { username: user.username, email: user.email };
+    user.updateLastLogin(); // Update last login time
+    res.render("index", { imageMainUrl: '/image.png', user: req.session.user || null })
   } catch (error) {
-    res.status(400).send('Error logging in: ' + error.message);
+    console.error(error);
+    res.status(500).send(error.message);
   }
 });
+
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Logout error:', err);
+    }
+    res.redirect('/');
+  });
+});
+
 
 module.exports = router;

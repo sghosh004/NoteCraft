@@ -3,7 +3,14 @@
 >
   <div class="logo fs-4 fw-bold">📚 NoteCraft</div>
   <nav class="d-flex gap-3">
+    <% if (user) { %>
+    <!-- User is logged in: Show Search, Username, and Logout -->
+    <a href="/search" class="btn btn-primary">Search</a>
+    <a href="/logout" class="btn btn-danger">Logout</a>
+    <% } else { %>
+    <!-- User is not logged in: Show Sign Up and Login -->
     <a href="/signup" class="btn btn-success">Sign Up</a>
     <a href="/login" class="btn btn-success">Login</a>
+    <% } %>
   </nav>
 </header>

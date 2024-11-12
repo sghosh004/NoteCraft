@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View File</title>
+  </head>
+  <body>
+    <h2><%= file.subject %> (<%= file.subjectCode %>)</h2>
+    <p>
+      Year: <%= file.year %> | Type: <%= file.type %> | Uploaded on: <%= new
+      Date(file.uploadDate).toLocaleDateString() %>
+    </p>
+    <a href="/uploads/<%= file.filePath %>" target="_blank">Open File</a>
+
+    <h3>Comments</h3>
+    <ul>
+      <% file.comments.forEach(comment => { %>
+      <li>
+        <strong><%= comment.author %>:</strong> <%= comment.text %> -
+        <small><%= new Date(comment.date).toLocaleDateString() %></small>
+      </li>
+      <% }) %>
+    </ul>
+
+    <form action="/file/<%= file._id %>/comment" method="POST">
+      <input type="text" name="author" placeholder="Your Name" required />
+      <textarea name="text" placeholder="Add a comment..." required></textarea>
+      <button type="submit">Add Comment</button>
+    </form>
+  </body>
+</html>

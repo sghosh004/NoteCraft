@@ -106,7 +106,7 @@
             class="form-control"
             id="subject"
             name="subject"
-            placeholder="Enter the subject"
+            placeholder="Enter the subject name"
             required
           />
         </div>
@@ -142,7 +142,6 @@
             type="submit"
             class="btn btn-success btn-block"
             id="upload-btn"
-            disabled
           >
             Upload
           </button>
@@ -170,6 +169,7 @@
           uploadButton.disabled = false; // Enable the upload button
         } else {
           // Do nothing if no new file is chosen, retain previous file name and status
+          fileNameDisplay.textContent = "No file chosen";
         }
       }
 
