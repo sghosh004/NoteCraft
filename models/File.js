@@ -8,6 +8,7 @@ const commentSchema = new mongoose.Schema({
 });
 
 const fileSchema = new mongoose.Schema({
+  uploadedBy: {type: String, required: true},
   originalName: {type: String},
   storedName:{type: String, required: true},
   subject: { type: String, required: true },

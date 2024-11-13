@@ -19,8 +19,9 @@
             <%= file.originalName %> (<%= file.subject %>)
           </h2>
           <p class="card-text text-muted">
-            Year: <%= file.year %> | Type: <%= file.type %> | Uploaded on: <%=
-            new Date(file.uploadDate).toLocaleDateString() %>
+            Year: <%= file.year %> | Type: <%= file.type %> | Uploaded By: <%=
+            file.uploadedBy%> | Uploaded on: <%= new
+            Date(file.uploadDate).toLocaleDateString() %>
           </p>
           <a
             href="/<%= file.filePath %>"
