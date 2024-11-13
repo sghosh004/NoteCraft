@@ -1,108 +1,87 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>View File</title>
-  </head>
-  <body>
-    <h2><%= file.subject %> (<%= file.subjectCode %>)</h2>
-    <p>
-      Year: <%= file.year %> | Type: <%= file.type %> | Uploaded on: <%= new
-      Date(file.uploadDate).toLocaleDateString() %>
-    </p>
-    <h3>File Preview</h3>
-    <embed
-      src="/<%= file.filePath %>"
-      width="100%"
-      height="600px"
-      type="application/pdf"
-      style="border: none"
-      title="File Preview"
-    />
-
-    <h3>Comments</h3>
-    <ul>
-      <% file.comments.forEach(comment => { %>
-      <li>
-        <strong><%= comment.author %>:</strong> <%= comment.text %> -
-        <small><%= new Date(comment.date).toLocaleDateString() %></small>
-      </li>
-      <% }) %>
-    </ul>
-
-    <form action="/file/<%= file._id %>/comment" method="POST">
-      <input type="text" name="author" placeholder="Your Name" required />
-      <textarea name="text" placeholder="Add a comment..." required></textarea>
-      <button type="submit">Add Comment</button>
-    </form>
-  </body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>View File</title>
-    <!-- Add Bootstrap for styling -->
+    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
   </head>
-  <body>
-    <div class="container">
-      <h2><%= file.subject %> (<%= file.subjectCode %>)</h2>
-      <p>
-        Year: <%= file.year %> | Type: <%= file.type %> | Uploaded on: <%= new
-        Date(file.uploadDate).toLocaleDateString() %>
-      </p>
-      <!-- Display the file -->
-      <a href="/<%= file.filePath %>" target="_blank">Open File</a>
+  <body class="bg-dark">
+    <div class="container my-4">
+      <!-- File Details -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title">
+            <%= file.originalName %> (<%= file.subject %>)
+          </h2>
+          <p class="card-text text-muted">
+            Year: <%= file.year %> | Type: <%= file.type %> | Uploaded on: <%=
+            new Date(file.uploadDate).toLocaleDateString() %>
+          </p>
+          <a
+            href="/<%= file.filePath %>"
+            class="btn btn-success"
+            target="_blank"
+            >Open File</a
+          >
+        </div>
+      </div>
 
       <!-- Comments Section -->
-      <h3>Comments</h3>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Comments</h3>
 
-      <!-- List of Comments -->
-      <ul class="list-unstyled comments-list">
-        <% file.comments.forEach(comment => { %>
-        <li class="mb-2">
-          <strong><%= comment.author %>:</strong>
-          <p><%= comment.text %></p>
-          <small class="text-muted"
-            ><%= new Date(comment.date).toLocaleDateString() %></small
-          >
-          <hr />
-        </li>
-        <% }) %>
-      </ul>
+          <!-- List of Comments -->
+          <ul class="list-unstyled comments-list">
+            <% file.comments.forEach(comment => { %>
+            <li class="mb-4 border-bottom pb-2">
+              <div>
+                <strong class="text-primary"><%= comment.author %>:</strong>
+                <p class="mb-1"><%= comment.text %></p>
+                <small class="text-muted"
+                  ><%= new Date(comment.date).toLocaleDateString() %></small
+                >
+              </div>
+            </li>
+            <% }) %>
+          </ul>
 
-      <!-- Comment Form (Only visible if logged in) -->
-      <% if (user) { %>
-      <form id="commentForm">
-        <input type="hidden" name="fileId" value="<%= file._id %>" />
-        <div class="mb-3">
-          <textarea
-            name="text"
-            class="form-control"
-            placeholder="Add a comment..."
-            required
-          ></textarea>
+          <!-- Comment Form (Visible if logged in) -->
+          <% if (user) { %>
+          <form id="commentForm" class="mt-4">
+            <input type="hidden" name="fileId" value="<%= file._id %>" />
+            <div class="mb-3">
+              <textarea
+                name="text"
+                class="form-control"
+                placeholder="Add a comment..."
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">
+              Submit Comment
+            </button>
+          </form>
+          <% } else { %>
+          <p class="mt-3 text-muted">
+            You must <a href="/login">log in</a> to comment.
+          </p>
+          <% } %>
         </div>
-        <button type="submit" class="btn btn-primary">Submit Comment</button>
-      </form>
-      <% } else { %>
-      <p>You must <a href="/login">log in</a> to comment.</p>
-      <% } %>
+      </div>
     </div>
 
-    <script>
-      // Add the submitComment function here
+    <!-- Bootstrap and JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script>
       async function submitComment(event) {
         event.preventDefault();
-
         const text = document.querySelector('textarea[name="text"]').value;
         if (!text.trim()) {
           alert("Comment cannot be empty.");
@@ -113,29 +92,23 @@
           const response = await fetch(`/file/<%= file._id %>/comment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text }), // Send the text in the request body
+            body: JSON.stringify({ text }),
           });
 
           if (response.ok) {
             const newComment = await response.json();
-
-            // Ensure that the response contains the required fields
             if (newComment.author && newComment.text && newComment.date) {
-              // Create a new list item for the comment
               const commentsList = document.querySelector(".comments-list");
               const commentItem = document.createElement("li");
-              commentItem.className = "mb-2";
+              commentItem.className = "mb-4 border-bottom pb-2";
               commentItem.innerHTML = `
-          <strong>${newComment.author}:</strong>
-          <p>${newComment.text}</p>
-          <small class="text-muted">${new Date(
-            newComment.date
-          ).toLocaleDateString()}</small>
-          <hr />
-        `;
+                <strong class="text-primary">${newComment.author}:</strong>
+                <p class="mb-1">${newComment.text}</p>
+                <small class="text-muted">${new Date(
+                  newComment.date
+                ).toLocaleDateString()}</small>
+              `;
               commentsList.appendChild(commentItem);
-
-              // Clear the textarea
               document.querySelector('textarea[name="text"]').value = "";
             } else {
               alert("Error: Incomplete comment data received.");
@@ -150,7 +123,6 @@
         }
       }
 
-      // Attach the submitComment function to the form submit event
       const commentForm = document.getElementById("commentForm");
       if (commentForm) {
         commentForm.addEventListener("submit", submitComment);

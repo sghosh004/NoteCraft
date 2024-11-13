@@ -67,8 +67,8 @@ router.post('/:fileId/comment', async (req, res) => {
   
     const { fileId } = req.params;
     const { text } = req.body;  // Get the text from the body
-    const author = req.session.user.name;  // Assuming user data is stored in session
-  
+    const author = req.session.user.username;  // Assuming user data is stored in session
+ 
     // Check if text is empty or not provided
     if (!text || !text.trim()) {
       return res.status(400).json({ error: "Comment body is required." });

@@ -12,6 +12,7 @@ const fileInteractionsRouter = require('./routes/fileInteractions');
 
 mongoose.connect('mongodb://localhost/User')
 
+app.use(express.json());
 app.use(express.static('public'))
 app.set('view engine', 'ejs')
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -28,19 +29,6 @@ app.get('/', (req, res) => {
   const user = req.session.user || null;
   res.render("index", { imageMainUrl: '/image.png', user: user })
 })
-
-// app.get('/view/:path', async (req, res) => {
-//   try {
-//       const file = await File.findById(req.params.path);
-//       if (!file) return res.status(404).send('File not found');
-      
-//       // Render viewFile.ejs with the file details
-//       res.render('viewFile', { file: file });
-//   } catch (error) {
-//       console.error('Error retrieving file:', error);
-//       res.status(500).send(error.message);
-//   }
-// });
 
 app.get('/signup', (req, res) => res.render('signup'))
 app.get('/login', (req, res) => res.render('login'))
