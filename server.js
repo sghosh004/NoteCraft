@@ -24,7 +24,6 @@ app.use(session({
     saveUninitialized: true,    // Creates a session even if it’s not modified
     cookie: { secure: false }   // Set to true in production if using HTTPS
   }));
-
   
 app.get('/', (req, res) => {
   const user = req.session.user || null;
