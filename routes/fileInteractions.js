@@ -74,6 +74,13 @@ router.post('/:fileId/comment', async (req, res) => {
       return res.status(400).json({ error: "Comment body is required." });
     }
   
+    const letterCount = text.replace(/\s+/g, '').length; // Removes all spaces and counts characters
+  if (letterCount > 100) {
+    return res.status(400).json({ 
+      error: `Comment cannot exceed 100 letters. Your comment has ${letterCount} letters.` 
+    });
+  }
+    
     try {
       // Add the comment to the file document
       const file = await File.findByIdAndUpdate(
