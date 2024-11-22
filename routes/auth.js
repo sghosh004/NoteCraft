@@ -245,7 +245,12 @@ router.post('/login', async (req, res) => {
         req.session.cookie.maxAge = 60000; // 1 minute
         
         user.updateLastLogin();
-        res.render("index", { imageMainUrl: '/image.png', user: req.session.user || null });
+        if(user != null && user.role == 'admin'){
+            return res.redirect('/admin');
+        }
+        else{
+            return res.render("index", { imageMainUrl: '/image.png', user: req.session.user || null });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).send(error.message);

@@ -114,7 +114,6 @@
   </body>
 </html> -->
 
-
 <!-- <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -343,7 +342,7 @@
         padding-right: 45px;
       } */
 
-       .password-toggle-btn {
+      .password-toggle-btn {
         background: none;
         border: none;
         padding: 0;
@@ -393,7 +392,9 @@
             minlength="3"
             required
           />
-          <div class="invalid-feedback">Username must be at least 3 characters long.</div>
+          <div class="invalid-feedback">
+            Username must be at least 3 characters long.
+          </div>
         </div>
         <div class="form-group mb-3">
           <input
@@ -404,7 +405,9 @@
             placeholder="Email"
             required
           />
-          <div class="invalid-feedback">Please enter a valid email address.</div>
+          <div class="invalid-feedback">
+            Please enter a valid email address.
+          </div>
         </div>
         <div class="form-group position-relative mb-3">
           <input
@@ -423,7 +426,9 @@
           >
             <i id="toggle-icon" class="bi bi-eye-slash-fill"></i>
           </button>
-          <div class="invalid-feedback">Password must be at least 8 characters long.</div>
+          <div class="invalid-feedback">
+            Password must be at least 8 characters long.
+          </div>
           <div class="password-requirements">
             Password must be at least 8 characters long.
           </div>
@@ -458,25 +463,27 @@
       }
 
       // Form validation
-      document.getElementById('signupForm').addEventListener('submit', function(event) {
-        const form = event.target;
-        if (!form.checkValidity()) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-      });
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", function (event) {
+          const form = event.target;
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add("was-validated");
+        });
 
       // Real-time email validation
-      document.getElementById('email').addEventListener('input', function(e) {
+      document.getElementById("email").addEventListener("input", function (e) {
         const email = e.target.value;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (emailRegex.test(email)) {
-          e.target.classList.remove('is-invalid');
-          e.target.classList.add('is-valid');
+          e.target.classList.remove("is-invalid");
+          e.target.classList.add("is-valid");
         } else {
-          e.target.classList.remove('is-valid');
-          e.target.classList.add('is-invalid');
+          e.target.classList.remove("is-valid");
+          e.target.classList.add("is-invalid");
         }
       });
     </script>

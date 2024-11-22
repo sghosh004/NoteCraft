@@ -48,6 +48,7 @@ const subjectRouter = require('./routes/subjects')
 const uploadRouter = require('./routes/upload')
 const session = require('express-session')
 const authRoutes = require('./routes/auth')
+const adminRoutes = require('./routes/admin');
 const path = require('path')
 const app = express()
 const fileInteractionsRouter = require('./routes/fileInteractions');
@@ -84,16 +85,17 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
     const user = req.session.user || null;
-    res.render("index", { imageMainUrl: '/image.png', user: user })
+    res.render("index", { imageMainUrl: '/image.png', user: user });
 })
-app.get('/signup', (req, res) => res.render('signup'))
-app.get('/login', (req, res) => res.render('login'))
-app.use('/file', fileInteractionsRouter);
-app.use('/', authRoutes)
-app.use('/search', searchRouter)
-app.use('/subjects', subjectRouter)
-app.use('/upload', uploadRouter)
 
+app.get('/signup', (req, res) => res.render('signup'));
+app.get('/login', (req, res) => res.render('login'));
+app.use('/file', fileInteractionsRouter);
+app.use('/', authRoutes);
+app.use('/search', searchRouter);
+app.use('/subjects', subjectRouter);
+app.use('/upload', uploadRouter)
+app.use('/admin', adminRoutes);
 app.use('/', authRoutes);
 
 app.listen(5000)

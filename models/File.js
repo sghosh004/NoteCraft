@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const commentSchema = new mongoose.Schema({
   author: String,
   text: String,
-  date: { type: Date, default: Date.now }
+  date: { type: Date, default: Date.now },
+  report: {type: Boolean, default: false}
 });
 
 const fileSchema = new mongoose.Schema({
@@ -19,7 +20,11 @@ const fileSchema = new mongoose.Schema({
   description:{type: String},
   uploadDate: { type: Date, default: Date.now },
   likes: { type: Number, default: 0 },
-  comments: [commentSchema]
+  comments: [commentSchema],
+
+  isVerified: { type: Boolean, default: false }, // Whether the file is verified
+  verifiedBy: { type: String },                 // Admin username/ID who verified the file
+  verificationDate: { type: Date }
 });
 
 module.exports = mongoose.model('File', fileSchema);
